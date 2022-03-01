@@ -24,10 +24,11 @@ class Connector
         return $pdoQuery->fetchAll();
     }
 
-    private static function connect(): void
+    public static function connect(): void
     {
         try {
             self::$connection = new PDO(self::$dsn, self::$user, self::$password);
+            self::$connected = true;
         } catch (Exception $e) {
             Responser::response(false, [], $e->getMessage());
         }
