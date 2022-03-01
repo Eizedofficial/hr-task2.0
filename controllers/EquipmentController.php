@@ -46,8 +46,7 @@ class EquipmentController
         if(empty($dbResponse)) {
             self::$alreadyStoredSerials = [];
         } else {
-            $b = array_column($dbResponse, 'serial');
-            self::$alreadyStoredSerials = $b;
+            self::$alreadyStoredSerials = array_column($dbResponse, 'serial');
         }
     }
 
