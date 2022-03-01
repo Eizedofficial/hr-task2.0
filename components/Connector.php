@@ -8,7 +8,7 @@ class Connector
     private static string $password = "root";
     private static PDO $connection;
 
-    public static function query(string $query, ...$args): array|bool
+    public static function query(string $query, array $args = []): array|bool
     {
         if (!self::$connected) {
             self::connect();
@@ -16,12 +16,15 @@ class Connector
 
         try {
             $pdoQuery = self::$connection->prepare($query);
-            $pdoQuery->execute($args);
+            foreach ($args as $index => $arg) {
+                $pdoQuery->bindValue($index + 1, $arg);
+            }
+            $pdoQuery->execute();
         } catch (Exception $e) {
             Responser::response(false, [], $e->getMessage());
         }
 
-        return $pdoQuery->fetchAll();
+        return $pdoQuery->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public static function connect(): void
